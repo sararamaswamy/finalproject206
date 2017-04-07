@@ -61,6 +61,7 @@
 
 
 # Write your test cases here.
+## These tests are for the movie class methods
 class MovieTests(unittest.TestCase):
 	# def test_movie_init(self):
 
@@ -86,6 +87,7 @@ class MovieTests(unittest.TestCase):
 		self.assertEqual(type(get_director_data(d)), type(t))
 
 class TweetTests(unittest.TestCase):
+## these tests are for the Tweet class methods
 
 	def test_tweet_constructor1(self):
 		t = Tweet("Steven Spielberg")
