@@ -41,37 +41,20 @@ Movie
 
 
 * What are 3 instance variables this class will have? What will they be called, and what information will they hold? Why are they important?
-movie_title: holds the movie title text data, and it’s important, because this will link the tables together.
-movie_director: this will contain text data referring to the director. It’s important, because it will allow for database joins.
-movie_imdb_rating:this will contain an integer referring to the movie rating and is important again for finding things like highest ranked movie, or sorting according to ranking. 
+self.movie_title: holds the movie title text data, and it’s important, because this will link the tables together.
+self.movie_director: this will contain text data referring to the director. It will allow me to pass a director name to my Tweet class, to create a list of Tweet instances. 
+self.movie_imdb_rating:this will contain a float referring to the movie rating and is important again for finding things like highest ranked movie, or sorting according to ranking. 
 
 
 * Explain 2 methods the class will have that are not the class constructor (__init__ method) by answering the following questions for each. 
-ONE METHOD: twitter_search_directors
+
+
+ONE METHOD: num_languages
 - What will the name of the method be?
-twitter_search_directors
+num_languages
 
 - What will the method do?
-It will use the list of instances of class Movie (each title), to search Twitter for the tweets of directors of the three or more movies.
-
-- Will it take any additional input? 
-No additional data accepted besides the movie title.
-
-
-- Will it return anything? Should it change anything about the instance/an instance variable? 
-It will return a list of tuples, containing the tweets of the directors. 
-
-- Why is it useful for this class definition, in this program?
-It is useful, because it will allow us to search the database for movies by specific directors. 
-
-
-
-ANOTHER METHOD: get_neighborhood_user_data
-- What will the name of the method be?
-get_neighborhood_user_data
-
-- What will the method do?
-This will get information about each of the users mentioned in the tweets I get or the users who posted the tweets I get. 
+This will count the number of languages listed under the Movie’s json response object dictionary, using a for loop. 
 
 
 - Will it take any additional input? 
@@ -79,19 +62,34 @@ No.
 
 
 - Will it return anything? Should it change anything about the instance/an instance variable? 
-It will return a list of User-representative dictionaries in a variable. I may decide to create a separate class for this, but for the purposes of this plan, I will begin with creating a list of dictionaries. 
+It will return the number of languages found in the list, associated with the “Language” key.
 
 
 - Why is it useful for this class definition, in this program?
-It is useful, because it will allow me to eventually load this data into a database.
+It is useful, because it will allow me to place this integer directly into a database table and potentially rank movies by number of languages present; if someone is looking to watch a movie with more movies to gain language exposure, this would be particularly helpful. 
 
 
+ANOTHER METHOD: get_director_data
+- What will the name of the method be?
+get_director_data
+
+- What will the method do?
+This function will take a dictionary of data representing a movie and creates a class Tweet instance with the self.movie_director as the search term, which is the search term I’ve decided to use in my project. 
+
+- Will it take any additional input? 
+No.
+
+- Will it return anything? Should it change anything about the instance/an instance variable? 
+It will return a class Tweet instance, which contains a list of dictionaries representing the tweet data from the search term. 
+
+
+- Why is it useful for this class definition, in this program?
+It is useful, because it will allow me to collect a list of the tweets associated with each of the directors’ name, and then I can easily concatenate those lists. 
 
 * What will the tables in your database be?
 Tweets
 Users
 Movies
-
 
 
 * What fields will each database table have? Which field of them is the primary key? You should list the fields for each database table here, e.g.
@@ -115,7 +113,7 @@ Movies
 - movie_title TEXT 
 - director TEXT
 - num_languages INTEGER
-- rating INTEGER
+- rating FLOAT
 - top_actor TEXT
 - genre TEXT (will try to find this info for the table)
 
@@ -154,6 +152,6 @@ I will need to use several list comprehensions, so I can manipulate them more ef
 
 * What will your output look like? Will it be a .txt file? a CSV file? something else? What information will it contain? >>>This is especially important if you are doing Option 3, but it's important for everyone!<<<
 
-My output file will be a .txt file. It will contain various results of querying my databases, using join statements for intersections. I am hoping to reveal interesting patterns in this way. It will print descriptions of what prints to the file, so the data is described. 
-For example, I will be able to print the 3 movie titles that were part of the search, accompanied by a summary of various twitter data associated with the movie title.
+My output file will be a .txt file. It will contain various results of querying my databases, using join statements for intersections. I am hoping to reveal interesting patterns in this way. The document will be well-organized. 
+For example, I will be able to print the 3 movie titles that were part of the search, accompanied by a summary of various twitter data associated with the movie title. 
 
