@@ -10,7 +10,7 @@ import twitter_info  ## for connecting to my personal key
 import json ## for downloading api and formating api data for python manipulation
 import sqlite3 ## for creating and querying my 3 Tables (Movies, Tweets, Users)
 import omdb ## After I pip install omdb, i will be able to make requests to the omdb api
-
+import requests ## requests works under the hood of omdb--from documentation
 ## Pseudocode for functions begins here
 
 
