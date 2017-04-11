@@ -1,7 +1,20 @@
-## Your name:
-## The option you've chosen: Option 2
+###### INSTRUCTIONS ###### 
 
-# Put import statements you expect to need here!
+# An outline for preparing your final project assignment is in this file.
+
+# Below, throughout this file, you should put comments that explain exactly what you should do for each step of your project. You should specify variable names and processes to use. For example, "Use dictionary accumulation with the list you just created to create a dictionary called tag_counts, where the keys represent tags on flickr photos and the values represent frequency of times those tags occur in the list."
+
+# You can use second person ("You should...") or first person ("I will...") or whatever is comfortable for you, as long as you are clear about what should be done.
+
+# Some parts of the code should already be filled in when you turn this in:
+# - At least 1 function which gets and caches data from 1 of your data sources, and an invocation of each of those functions to show that they work 
+# - Tests at the end of your file that accord with those instructions (will test that you completed those instructions correctly!)
+# - Code that creates a database file and tables as your project plan explains, such that your program can be run over and over again without error and without duplicate rows in your tables.
+# - At least enough code to load data into 1 of your dtabase tables (this should accord with your instructions/tests)
+
+######### END INSTRUCTIONS #########
+
+# Put all import statements you need here.
 import unittest  ## for testing
 import itertools ## for generators and list comprehension
 import collections ## for containers and Counter
@@ -11,6 +24,8 @@ import json ## for downloading api and formating api data for python manipulatio
 import sqlite3 ## for creating and querying my 3 Tables (Movies, Tweets, Users)
 import omdb
 import re
+
+# Begin filling in instructions....
 
 
 consumer_key = twitter_info.consumer_key
@@ -283,8 +298,6 @@ for item in actor_data:
 
 
 
-
-
 ##Task 3: Process Data, create output file
 ## MAke queries to the database to grab intersections of  data, use at last 4 of the processing mechanisms in the project requirements to find out something interesting or cool or weird about it. 
 
@@ -293,8 +306,12 @@ for item in actor_data:
 
 
 
-# Write your test cases here.
-## These tests are for the movie class methods
+
+
+
+
+# Put your tests here, with any edits you now need from when you turned them in with your project plan.
+
 # class MovieTests(unittest.TestCase):
 # 	# def test_movie_init(self):
 
@@ -340,17 +357,6 @@ for item in actor_data:
 # 		tweet_data = Tweet("Steven Spielberg")
 # 		t = get_tweet_data(tweet_data.movie_director)
 # 		self.assertEqual(type(t)[0], type({}))
-
-
-
-
-
-
-		
-
-		
-
-
-# ## Remember to invoke all your tests...
-# if __name__ == "__main__":
-# 	unittest.main(verbosity=2)
+# Remember to invoke your tests so they will run! (Recommend using the verbosity=2 argument.)
+if __name__ == "__main__":
+	unittest.main(verbosity=2)
