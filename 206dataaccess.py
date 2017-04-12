@@ -52,66 +52,77 @@ except:
 
 ## except, create new cache diction 
 
+Movie_Titles = ["Frozen", "Mean Girls", "The Notebook"]
 
-## ombdb.search_movie("Frozen")
-## example of pulling title from list and finding info on it
-Test_list = ["Frozen", "21 Jump Street", "Mean Girls"]
-for title in Test_list:
-	x = omdb.title(title)
-	# print(x)
-ombdb_test_request = omdb.title("Mean Girls")
-# print(ombdb_test_request)
-# print(ombdb_test_request)
-# print(ombdb_test_request["language"])
-# print(type(ombdb_test_request["language"]))
-
-# print(ombdb_test_request)
-# print(len(ombdb_test_request))
-# print(type(ombdb_test_request))
-# print(ombdb_test_request["title"])
-
-## why does this return a string? 
-# x = json.dumps(ombdb_test_request)
-# print(ombdb_test_request)
-# print(type(ombdb_test_request))
-# print(len(ombdb_test_request))
-# print(ombdb_test_request[0])
-# print(type(ombdb_test_request[0]))
 
 ## Task 1: Creating 3 Tables 
-
-
-
-## Tweets table:
-## rows: tweet_text TEXT, tweet_id STRING PRIMARY KEY, user_id INTEGER, movie_title TEXT, num_favs INTEGER, num_retweets INTEGER 
-
-## Users table (for Twitter users)
-## user_id STRING PRIMARY KEY, screen_name TEXT, num_favorites INTEGER, description TEXT
-
+## Create a Tweet, Users, and Movies table.
 
 ## Movies table
 ## ID PRIMARY KEY, movie_title TEXT, director TEXT, num_lang INTEGER, IMDB_rating FLOAT, first_actor TEXT, 
 
+conn = sqlite3.connect('si2016finalproject.db')
+cur = conn.cursor()
 
+cur.execute('DROP TABLE IF EXISTS Movies')
+statement = 'CREATE TABLE IF NOT EXISTS '
+statement += 'Movies (ID INTEGER PRIMARY KEY, movie_title TEXT, directors TEXT, IMDB_rating REAL, run_time INTEGER, num_lang INTEGER, box_office$ INTEGER, first_actor TEXT)'
+
+cur.execute(statement)
+
+
+
+# Users table (for Twitter users)
+# user_id STRING PRIMARY KEY, screen_name TEXT, num_favorites INTEGER, description TEXT
+
+# self.user_id = single_tweet_dictionary["id_str"]
+# 		self.screen_name = single_tweet_dictionary["screen_name"]
+# 		self.num_favorites = single_tweet_dictionary["favourites_count"]
+# 		self.description = single_tweet_dictionary["description"]
+# 		self.followers = single_tweet_dictionary["followers_count"]
+
+cur.execute('DROP TABLE IF EXISTS Users')
+statement = 'CREATE TABLE IF NOT EXISTS '
+statement += 'Users (user_id STRING PRIMARY KEY, screen_name TEXT, num_favorites INTEGER, description TEXT, num_followers INTEGER)'
+
+cur.execute(statement)
+
+
+# Tweets table:
+# rows: tweet_text TEXT, tweet_id STRING PRIMARY KEY, user_id INTEGER, movie_title TEXT, num_favs INTEGER, num_retweets INTEGER 
+
+cur.execute('DROP TABLE IF EXISTS Tweets')
+statement = ('CREATE TABLE IF NOT EXISTS ')
+statement += 'Tweets (tweet_id STRING PRIMARY KEY, tweet_text TEXT, user_id STRING, first_actor TEXT, num_favs INTEGER, num_retweets INTEGER, FOREIGN KEY(user_id) REFERENCES Users(user_id) ON UPDATE SET NULL, FOREIGN KEY (first_actor) REFERENCES Movies ON UPDATE SET NULL)'
+
+cur.execute(statement)
+
+
+
+
+
+conn.commit()
 
 
 ## here, use the lists of instances/dictionaries/etc . . . 
 
 ## Task 2: Write functions
 
-def get_tweet_search_term_data(search_term):
-	if search_term in CACHE_DICTION:
-		search_data = CACHE_DICTION[search_term]
-		return(search_data)
-	else:
-		search_data = api.search(search_term)
-		CACHE_DICTION[search_term] = search_data
-		f = open(CACHE_FNAME, 'w')
-		f.write(json.dumps(CACHE_DICTION))
-		f.close()
-		return search_data
+## Might put search term function under the Tweet class
+# def get_tweet_search_term_data(search_term):
+# 	if search_term in CACHE_DICTION:
+# 		search_data = CACHE_DICTION[search_term]
+# 		return(search_data)
+# 	else:
+# 		search_data = api.search(search_term)
+# 		CACHE_DICTION[search_term] = search_data
+# 		f = open(CACHE_FNAME, 'w')
+# 		f.write(json.dumps(CACHE_DICTION))
+# 		f.close()
+# 		return search_data
 
 
+## takes user_name OR id, so str_id will be fine
 def get_twitter_user_data(user_name):
 	if user_name in CACHE_DICTION:
 		print('using cached data for', user_name)
@@ -123,7 +134,7 @@ def get_twitter_user_data(user_name):
 		CACHE_DICTION[user_name] = user_data
 		f = open(CACHE_FNAME, 'w')
 		f.write(json.dumps(CACHE_DICTION))
-		c.close()
+		f.close()
 	return user_data
 
 
@@ -153,7 +164,6 @@ def get_omdb_data(movie_title):
 		# return the dictionary object (cached or not for that movie)
 
 
-
 ## This creates an instance of the movie, allows you to calculate the number of languages in it, its box office profit, and the run_time --> important for summary stats page. 
 class Movie(object): 
 	def __init__(self, dictionary_data):
@@ -168,7 +178,7 @@ class Movie(object):
 			run_time_data = dictionary_data["runtime"]
 			regex1 = r'(\d+)'
 			run_time_digits = re.findall(regex1, run_time_data)
-			self.run_time = run_time_digits
+			self.run_time = run_time_digits[0]
 
 
 			languages = dictionary_data["language"]
@@ -180,7 +190,7 @@ class Movie(object):
 			profit_data = dictionary_data["box_office"]
 			regex2 = r'[$](.+).\d\d'
 			profit = re.findall(regex2, profit_data)
-			self.box_office = profit
+			self.box_office = profit[0]
 			
 
 		
@@ -188,11 +198,6 @@ class Movie(object):
 	def __str__(self):
 		return "Movie title: {}, directed by {}, and has a {} IMDB rating".format(self.movie_title, self.movie_director, self.movie_imdb_rating)
 
-	def get_actor_search_data(self):
-		actor_search = Tweet(self.actor)
-		search_result = actor_search.get_tweet_data()
-	# search_result = get_tweet_search_term_data(self.movie_title)
-		return search_result
 
 # def num_languages(self):
 # 	languages = dictionary_data["language"]
@@ -229,36 +234,51 @@ class Tweet(object):
 	def __init__(self, actor_name):
 		self.actor = actor_name
 
-	def get_tweet_data(self):
+	def get_actor_data(self):
 		if self.actor in CACHE_DICTION:
 			print('using cached data for', self.actor)
 			actor_tweet_data = CACHE_DICTION[self.actor]
 		else:
-			print('using cached data for', self.actor)
+			print('using internet data for', self.actor)
+			##actor_tweet_Data is json object
 			actor_tweet_data = api.search(str(self.actor))
 			CACHE_DICTION[self.actor] = actor_tweet_data
 			f= open(CACHE_FNAME, 'w')
 			f.write(json.dumps(CACHE_DICTION))
 			f.close()
-			return actor_tweet_data
+		## need this outside the if and else, because it will never execute if the if is true
+		return actor_tweet_data
 
+
+		## tweet_id (primary key)
+		## tweet text,
+		## user who posted the tweet
+		## the actor search this tweet came from (reference the movies table)
+		## ## number favorites
+		## number retweets
 
 		# if the self.movie_title_search name is in the cache diction, grab that data
 		# if it's not in the cache diction, use the twitter search api to get data for the first 20 search results 
 		# write that data to the cache file
 		# return list of 20 dictionaries containing tweet data
 
-## class TwitterUser(object):
-	##def __init__(self, single_tweet_dictionary):
-		## users_mentioned = single_tweet_dictionary["mentions"]
-		## user_who_posted = single_tweet_dictionary["user"]["screen_name"]
 
 
+# Users table (for Twitter users)
+# user_id STRING PRIMARY KEY, screen_name TEXT, num_favorites INTEGER, description TEXT, followers INTEGER
+
+class TwitterUser(object):
+	def __init__(self, single_tweet_dictionary):
+		self.user_id = single_tweet_dictionary["id_str"]
+		self.screen_name = single_tweet_dictionary["screen_name"]
+		self.num_favorites = single_tweet_dictionary["favourites_count"]
+		self.description = single_tweet_dictionary["description"]
+		self.followers = single_tweet_dictionary["followers_count"]
 
 
 
 # Task Pre-3: Set up code for putting into database
-Movie_Titles = ["Frozen", "Mean Girls", "The Notebook"]
+
 # list comprehension creates list of dicionaries with the movie data 
 movie_data_list = [get_omdb_data(movie) for movie in Movie_Titles]
 movie_class_instances = [Movie(item) for item in movie_data_list]
@@ -267,38 +287,131 @@ tweet_class_instances = [Tweet(item.actor) for item in movie_class_instances]
 ## We know tweet_class_instances is working if the actor names are stores in the Tweet instances 
 # for item in tweet_class_instances:
 # 	print(item.actor)
-real_list_of_tweet_instances = [item.actor for item in tweet_class_instances]
+# real_list_of_tweet_instances = [item.actor for item in tweet_class_instances]
 
 ##actor data is list of tuples
-actor_data = [actor.get_tweet_data() for actor in tweet_class_instances]
-# print(actor_data)
+actor_data = [actor.get_actor_data() for actor in tweet_class_instances]
+
+## Tweet data from three searches 
+# print(len(actor_data))
 # print(actor_data)
 
-user_mentions = []
-users_who_posted = []
+## trying to make two lists, so I can call get_twitter_user_data on each of the items in both lists
+## set guarantees element inside set is unique 
+user_mentions = set()
+user_who_posted = set()
+
+tweet_info_tuple_list_2 = []
+## for every dictionary of data associated with one of the actors
 for item in actor_data:
+
+
 	## give me info about the posters of the tweets and info about the users mentioned in the tweets
 	print(item)
+	print(type(item))
 	print("\n")
 	print("\n")
-	mentions_in_tweet = item["statuses"]["entities"]["user_mentions"]
-	for item in mentions_in_tweet:
-		user_mentions.append(item)
+	# mentions_in_tweet = item["statuses"]["entities"]["user_mentions"]
+	## give me the list of dictionaries (statuses)
+	mentions_in_tweet = item["statuses"]
 
-	users_who_posted.append(item["user"]["id_str"])
 
+	## for each dictionary, item (get this attribute), unless there are none
+	for list_item in mentions_in_tweet:
+		tuple_instance = list_item["id_str"], list_item["text"], list_item["user"]["id_str"], item["search_metadata"]["query"], list_item["favorite_count"], list_item["retweet_count"]
+		tweet_info_tuple_list_2.append(tuple_instance)
+		get_user_mentions = list_item["entities"]["user_mentions"]
+		for name in get_user_mentions:
+			name_id = name["id_str"]
+			# print(name_id)
+			user_mentions.add(name_id)
+	for list_item in mentions_in_tweet:
+		get_user_who_posted = list_item["user"]["id_str"]
+		user_who_posted.add(get_user_who_posted)
+
+# instance_tuple = instance.tweet_id, instance.tweet_text, instance.user_id, instance.first_actor, instance.num_favs, instance.num_retweets
+
+
+		# print(get_user_mentions)
+		# print("\n")
+		# print("\n")
+# 		user_mentions.add(get_user_mentions)
+# print(user_mentions)
+# print(user_who_posted)
+set_of_both_mentions_and_users = (user_mentions | user_who_posted)
+# print(set_of_both_mentions_and_users)
+data_from_both = []
+for id_str in set_of_both_mentions_and_users:
+	try:
+		the_data = get_twitter_user_data(id_str)
+		data_from_both.append(the_data)
+	except: 
+		## if there is no such existing id_str still, pass
+		pass
+
+
+# print(data_from_both)
+
+
+
+twitter_user_instances  = [TwitterUser(data_dic) for data_dic in data_from_both]
+user_tuple_list = []
+for instance in twitter_user_instances:
+	instance_tuple = instance.user_id, instance.screen_name, instance.num_favorites, instance.description, instance.followers
+
+	user_tuple_list.append(instance_tuple)
+
+# print(user_tuple_list[0])
+
+
+	## statuses is a list of dictionaries 
+
+	# for item in mentions_in_tweet:
+# add is for sets
+	# user_mentions.add(item)
+
+	# users_who_posted.append(item["user"]["id_str"])
+
+	# self.tweet_id= dic["id_str"]
+	# 		self.tweet_text = dic["text"]
+	# 		self.user_id = dic["user"]["id_str"]
+	# 		self.num_favs = dic["favorite_count"]
+	# 		self.num_retweets = dic["retweet_count"]
 
 
 
 ## testing that list of instances works correctly 
-# for instance in movie_class_instances:
-# 	print(instance.movie_title, instance.movie_director, instance.movie_imdb_rating, instance.run_time, instance.num_languages, instance.box_office)
-# 	print("\n")
+movie_tuple_list = []
+for instance in movie_class_instances:
+	instance_tuple = None, instance.movie_title, instance.movie_director, instance.movie_imdb_rating, instance.run_time, instance.num_languages, instance.box_office, instance.actor
+	# print(instance_tuple)
+	movie_tuple_list.append(instance_tuple)
+	# print("\n")
+
+# print(movie_tuple_list)
+
+statement = 'INSERT OR IGNORE INTO Movies VALUES (?, ?, ? ,? , ?, ?, ?, ?)'
+for item in movie_tuple_list:
+	cur.execute(statement, item)
+
+conn.commit()
 
 
+statement = 'INSERT OR IGNORE INTO Users VALUES (?, ?, ?, ?, ?)'
+for item in user_tuple_list:
+	cur.execute(statement,item)
+
+conn.commit()
+
+statement = 'INSERT OR IGNORE INTO Tweets VALUES (?, ?, ?, ?, ?, ?)'
+for item in tweet_info_tuple_list_2:
+	cur.execute(statement,item)
+
+conn.commit()
 
 
 ##Task 3: Process Data, create output file
+
 ## MAke queries to the database to grab intersections of  data, use at last 4 of the processing mechanisms in the project requirements to find out something interesting or cool or weird about it. 
 
 ## write this data to a text file (summary stats page) with TITLE
