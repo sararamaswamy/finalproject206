@@ -160,6 +160,8 @@ def get_omdb_data(movie_title):
 		f.close()
 	return movie_info
 
+## invoke the function for tests
+omdb_test_object = get_omdb_data("Frozen")
 		# if there is no cached data for the movie title, request data from omdb api to get a dictionary about that one movie
 		# return the dictionary object (cached or not for that movie)
 
@@ -425,51 +427,60 @@ conn.commit()
 
 # Put your tests here, with any edits you now need from when you turned them in with your project plan.
 
-# class MovieTests(unittest.TestCase):
-# 	# def test_movie_init(self):
+class MovieTests(unittest.TestCase):
+	# def test_movie_init(self):
 
-# 	def test_movie_constructor1(self):
-# 		dictionary_data = {}
-# 		m = Movie(dictionary_data)
-# 		## test type
-# 		self.assertEqual(type(m.movie_title), type("string"))
+	def test_movie_constructor1(self):
+		# dictionary_data = {}
+		d = get_omdb_data("Frozen")
+		m = Movie(d)
+		## test type
+		self.assertEqual(type(m.movie_title), type("string"))
 
-# 	def test_movie_constructor2(self):
-# 		dictionary_data = {}
-# 		m = Movie(dictionary_data)
-# 		self.assertEqual(type(m.movie_director), type("string"))
+	def test_movie_constructor2(self):
+		d = get_omdb_data("Frozen")
+		m = Movie(d)
+		self.assertEqual(type(m.movie_director), type("string"))
 
-# 	def test_movie_constructor3(self):
-# 		dictionary_data = {}
-# 		m = Movie(dictionary_data)
-# 		self.assertEqual(type(m.movie_imdb_rating), type(9.2))
+	def test_movie_constructor3(self):
+		d = get_omdb_data("Frozen")
+		m = Movie(d)
+		self.assertEqual(type(m.movie_imdb_rating), type("string"))
 
-# 	def test_get_director_data1(self):
-# 		d = {}
-# 		t = Tweet("Steven Spielberg")
-# 		self.assertEqual(type(get_director_data(d)), type(t))
+	def test_get_actor_data1(self):
+		d = {}
+		t = Tweet("Lindsay Lohan")
+		self.assertEqual(get_actor_data(t.actor), type(d))
 
-# class TweetTests(unittest.TestCase):
-# ## these tests are for the Tweet class methods
+	def test_movie_constructor4(self):
+		d = get_omdb_data("Frozen")
+		m = Movie(d)
+		self.assertEqual(type(m.run_time), type("string"))
 
-# 	def test_tweet_constructor1(self):
-# 		t = Tweet("Steven Spielberg")
-# 		self.assertEqual(type(t.movie_director), type("string"))
+	def test_movie_constructor5(self):
+		d = get_omdb_data("Frozen")
+		m = Movie(d)
+		self.assertEqual(type(m.box_office), type("string"))
 
-# 	def test_get_tweet_data1(self):
-# 		tweet_data = Tweet("Steven Spielberg")
-# 		t = get_tweet_data(tweet_data.movie_director)
-# 		self.assertEqual(type(t), type([]))
 
-# 	def test_get_tweet_data2(self):
-# 		tweet_data = Tweet("Steven Spielberg")
-# 		t = get_tweet_data(tweet_data.movie_director)
-# 		self.assertEqual(len(t), 20)
 
-# 	def test_get_tweet_data3(self):
-# 		tweet_data = Tweet("Steven Spielberg")
-# 		t = get_tweet_data(tweet_data.movie_director)
-# 		self.assertEqual(type(t)[0], type({}))
+class Tweet_Data(unittest.TestCase):
+## these tests are for the Tweet class methods
+
+	def test_get_twitter_user_data(self):
+		x = get_twitter_user_data("172403197")
+		self.assertEqual(type(x), type({}))
+
+	def test_2(self):
+		x = Tweet("Lindsay Lohan")
+		y = x.get_actor_data()
+		self.assertEqual(type(y), type({}))
+
+
+		## num_favorites
+		## description
+		#followers
+
 # Remember to invoke your tests so they will run! (Recommend using the verbosity=2 argument.)
 if __name__ == "__main__":
 	unittest.main(verbosity=2)
