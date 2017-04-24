@@ -1,0 +1,20 @@
+Summary stats for the following movies: Frozen, Mean Girls, The Notebook, Argo on 4/20/2017
+Frozen, directed by Chris Buck, Jennifer Lee, has a 7.5 IMDB rating. Its first actor is Kristen Bell, with a total run time of 102 minutes. It contains 2 languages and brought in a total of $400,736,600 in box office profits.
+
+Mean Girls, directed by Mark Waters, has a 7.0 IMDB rating. Its first actor is Lindsay Lohan, with a total run time of 97 minutes. It contains 4 languages and brought in a total of $85,974,306 in box office profits.
+
+The Notebook, directed by Nick Cassavetes, has a 7.9 IMDB rating. Its first actor is Tim Ivey, with a total run time of 123 minutes. It contains 1 languages and brought in a total of $81,000,000 in box office profits.
+
+Argo, directed by Ben Affleck, has a 7.7 IMDB rating. Its first actor is Ben Affleck, with a total run time of 120 minutes. It contains 3 languages and brought in a total of $136,019,448 in box office profits.
+
+After searching twitter data about the first star actor of each of these movies, the text from tweets posted by the most influential users identified in the search (those with more than 1000 followers) were collected. 
+Although all of the mentioned screen names within these tweets were: {'BeautyPostss', 'SpencerAlthouse', 'Farandula242', 'misestrelar'}
+The most mentioned screen name of these screen names was: BeautyPostss
+
+The most popular tweets, each with greater than 1000 retweets, were: 
+RT @GG_quotes: Kristen Bell: Gossip Girl here
+
+me: YOUR ONE AND ONLY SOURCE INTO THE SCANDALOUS LIVES OF MANHATTAN'S ELITE https://t.co/jSX…, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @BeautyPostss: never forget lindsay lohan's contour in her mugshot https://t.co/EdqHMFDnbn, RT @KellyannePolls: Congratulations to my friend &amp; fellow "Camden Girl" Kay Ivey...just sworn-in as Governor of Alabama. The second woman g…, RT @Mike_Uva: Breaking: Tim Tebow homers in his first at-bat. Are you kidding me? https://t.co/tzal9jtvyH, RT @rxlnd: Mark Wahlberg talking Ben Affleck into doing a movie about the Patriots and Aaron Hernandez's case. https://t.co/kPPzr36ITx, RT @rxlnd: Mark Wahlberg talking Ben Affleck into doing a movie about the Patriots and Aaron Hernandez's case. https://t.co/kPPzr36ITx
+
+The most popular users, each with greater than 5000 favorited tweets total were: 
+GutsGloryAbhi, stoesselsalute, stacistormy, uhlani, muhamedrefaay2, idledixmonds, southshawty, Tim_K_Long, Fxshion2Society, Zoe1o1Zoe, BeautyPostss, rooseob, katie_emmax, CaraotaDigital, s0phiecamilleri, tajaneebriscoe, chrismoodycom, SrujanaDeva

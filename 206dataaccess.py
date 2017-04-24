@@ -52,7 +52,7 @@ except:
 
 ## except, create new cache diction 
 
-Movie_Titles = ["Frozen", "Mean Girls", "The Notebook"]
+Movie_Titles = ["Frozen", "Mean Girls", "The Notebook", "Argo"]
 
 
 ## Task 1: Creating 3 Tables 
@@ -198,7 +198,7 @@ class Movie(object):
 		
 
 	def __str__(self):
-		return "Movie title: {}, directed by {}, and has a {} IMDB rating".format(self.movie_title, self.movie_director, self.movie_imdb_rating)
+		return "{}, directed by {}, has a {} IMDB rating. Its first actor is {}, with a total run time of {} minutes. It contains {} languages and brought in a total of ${} in box office profits.".format(self.movie_title, self.movie_director, self.movie_imdb_rating, self.actor, self.run_time, self.num_languages, self.box_office)
 
 
 # def num_languages(self):
@@ -416,14 +416,100 @@ conn.commit()
 
 ## MAke queries to the database to grab intersections of  data, use at last 4 of the processing mechanisms in the project requirements to find out something interesting or cool or weird about it. 
 
+## This query grabs the text of tweets from users that have more than 1000 followers, which is interesting, because they will likely have the greatest number of views.
+query1 = 'SELECT Tweets.tweet_text FROM Tweets INNER JOIN Users on Tweets.user_id = Users.user_id WHERE Users.num_followers > 1000'
+cur.execute(query1)
+query1_obj = cur.fetchall()
+popular_text_list = [x[0] for x in 	query1_obj]
+# print(popular_text_list)
+regex1 = '@(\w+)'
+
+joined_text = ''.join(popular_text_list)
+
+regex_text = re.findall(regex1, joined_text)
+
+## Give all of the usernames mentioned in these tweets
+the_mentions = {x for x in regex_text}
+the_mentions_str = str(the_mentions)
+# print(the_mentions_str)
+
+
+
+## Give the most commonly mentioned names 
+mention_count = collections.Counter(regex_text)
+# print(mention_count)
+for name, count in mention_count.most_common(1):
+	most_common_name = name
+# print(most_common_name)
+# print(regex_text)
+
+# print(joined_text)
+# joined_2 = joined_text.split()
+# print(joined_2)
+
+
+query2 = 'SELECT tweet_text from Tweets WHERE num_retweets>1000'
+cur.execute(query2)
+query2_obj = cur.fetchall()
+popular_tweets = [x[0] for x in query2_obj]
+popular_tweets_joined = ', '.join(popular_tweets)
+
+query3= 'SELECT screen_name from Users WHERE num_favorites > 5000'
+cur.execute(query3)
+query3_obj = cur.fetchall()
+popular_users = [x[0] for x in query3_obj]
+popular_users_joined = ', '.join(popular_users)
+
+
+my_file = open("statsfile.txt", "w")
+my_file.write("Summary stats for the following movies: ")
+
+movie_title_str = ', '.join(Movie_Titles)
+my_file.write(movie_title_str)
+my_file.write(" on 4/20/2017")
+my_file.write("\n")
+for movie in Movie_Titles:
+	d = get_omdb_data(movie)
+	s = Movie(d)
+	my_file.write(str(s))
+	my_file.write("\n")
+	my_file.write("\n")
+my_file.write("After searching twitter data about the first star actor of each of these movies, the text from tweets posted by the most influential users identified in the search (those with more than 1000 followers) were collected. ")
+my_file.write("\n")
+my_file.write("Although all of the mentioned screen names within these tweets were: ")
+my_file.write(the_mentions_str)
+my_file.write("\n")
+my_file.write("The most mentioned screen name of these screen names was: ")
+my_file.write(most_common_name)
+
+
+my_file.write("\n")
+my_file.write("\n")
+my_file.write("The most popular tweets, each with greater than 1000 retweets, were: ")
+my_file.write("\n")
+my_file.write(str(popular_tweets_joined))
+my_file.write("\n")
+my_file.write("\n")
+my_file.write("The most popular users, each with greater than 5000 favorited tweets total were: ")
+my_file.write("\n")
+my_file.write(str(popular_users_joined))
+
+my_file.close()
+
+##find the most popular hashtags on the most influential twitter users' (more than 1000 followers)
+
+
+
+
+
 ## write this data to a text file (summary stats page) with TITLE
 
 
 
 
+## CLOSES THE DATABASE
 
-
-
+cur.close()
 
 # Put your tests here, with any edits you now need from when you turned them in with your project plan.
 
@@ -447,10 +533,29 @@ class MovieTests(unittest.TestCase):
 		m = Movie(d)
 		self.assertEqual(type(m.movie_imdb_rating), type("string"))
 
+	def test_movie_constructor_actor(self):
+		d= get_omdb_data("Frozen")
+		m = Movie(d)
+		self.assertEqual(m.actor, "Kristen Bell")
+
+	def test_movie_constructor4(self):
+		d = get_omdb_data("Frozen")
+		m = Movie(d)
+		self.assertEqual(m.num_languages, 2)
+
+	def test_movie_constructor5(self):
+		d = get_omdb_data("Frozen")
+		m = Movie(d)
+		self.assertEqual(type(m.num_languages), type(2))
+
+	def test_movie_constructor_runtime(self):
+		d= get_omdb_data("Frozen")
+		m = Movie(d)
+		self.assertEqual(m.run_time, "102")
+
 	def test_get_actor_data1(self):
-		d = {}
-		t = Tweet("Lindsay Lohan")
-		self.assertEqual(get_actor_data(t.actor), type(d))
+		d= Tweet("Lindsay Lohan")
+		self.assertEqual(type(d.get_actor_data()), type({}))
 
 	def test_movie_constructor4(self):
 		d = get_omdb_data("Frozen")
@@ -461,6 +566,12 @@ class MovieTests(unittest.TestCase):
 		d = get_omdb_data("Frozen")
 		m = Movie(d)
 		self.assertEqual(type(m.box_office), type("string"))
+
+	def test_movie_str_constructor(self):
+		d = get_omdb_data("Mean Girls")
+		s = Movie(d)
+		str_version = str(s)
+		self.assertEqual(str_version, "Mean Girls, directed by Mark Waters, has a 7.0 IMDB rating. Its first actor is Lindsay Lohan, with a total run time of 97 minutes. It contains 4 languages and brought in a total of $85,974,306 in box office profits.")
 
 
 
@@ -475,6 +586,37 @@ class Tweet_Data(unittest.TestCase):
 		x = Tweet("Lindsay Lohan")
 		y = x.get_actor_data()
 		self.assertEqual(type(y), type({}))
+
+class OMDB_Data(unittest.TestCase):
+	def test_get_omdb_data(self):
+		omdb_frozen = get_omdb_data("Frozen")
+		self.assertEqual(type(omdb_frozen), type({}))
+
+
+class Twitter_UserTests(unittest.TestCase):
+	def test_twitter_user_constr1(self):
+		s = TwitterUser(data_from_both[1])
+		self.assertEqual(type(s.user_id), type("string"))
+
+	def test_twitter_user_constr2(self):
+		s = TwitterUser(data_from_both[1])
+		self.assertEqual(type(s.screen_name), type("string"))
+
+	def test_twitter_user_constr3(self):
+		s = TwitterUser(data_from_both[1])
+		self.assertEqual(type(s.num_favorites), type(9))
+
+	def test_twitter_user_constr4(self):
+		s = TwitterUser(data_from_both[1])
+		self.assertEqual(type(s.description), type("string"))
+	def test_twitter_user_constr5(self):
+		s = TwitterUser(data_from_both[1])
+		self.assertEqual(type(s.followers), type(9))
+
+
+
+
+	## write mor tests to test the omdb_data_get_function
 
 
 		## num_favorites
